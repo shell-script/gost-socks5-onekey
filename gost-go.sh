@@ -124,7 +124,7 @@ function check_install_status(){
 			fi
 			if [ "${daemon_name}" == "systemd" ] && [ -f "/etc/systemd/system/gost.service" ]; then
 				if [ -n "$(grep -Eo "[0-9A-z]+:[0-9A-z]+" /etc/systemd/system/gost.service)" ]; then
-					gost_use_command="\n{green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" | sed "s/@://g" /etc/systemd/system/gost.service)&user=$(grep -Eo "[0-9A-z]+:[0-9A-z]+" /etc/systemd/system/gost.service | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9A-z]+:[0-9A-z]+" /etc/systemd/system/gost.service | awk -F : '{print $2}')${default_fontcolor}"
+					gost_use_command="\n{green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/systemd/system/gost.service | sed "s/@://g")&user=$(grep -Eo "[0-9A-z]+:[0-9A-z]+" /etc/systemd/system/gost.service | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9A-z]+:[0-9A-z]+" /etc/systemd/system/gost.service | awk -F : '{print $2}')${default_fontcolor}"
 				else
 					gost_use_command="\n{green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/systemd/system/gost.service | sed "s/@://g")${default_fontcolor}"
 				fi
@@ -544,6 +544,7 @@ function prevent_install_check(){
 			case "${install_force}" in
 			[yY][eE][sS]|[yY])
 				service gost stop
+				close_port
 				rm -rf /usr/local/gost
 				if [ "${daemon_name}" == "systemd" ]; then
 					systemctl disable gost
@@ -725,6 +726,7 @@ function clear_install(){
 			clear
 			echo -e "${error_font}停止Gost失败！"
 		fi
+		close_port
 		if [ "${daemon_name}" == "systemd" ]; then
 			systemctl disable gost.service
 			if [ "$?" -eq "0" ]; then
