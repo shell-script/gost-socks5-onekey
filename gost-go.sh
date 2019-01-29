@@ -310,7 +310,7 @@ WantedBy=multi-user.target
 						clear_install
 						exit 1
 					fi
-					sed -i "s#There_Is_Running_Command#nohup \"/usr/local/gost/gost -L socks5://${connect_username}:${connect_password}@:${install_port}\" > \"/usr/local/gost/running_log.log\" 2>\&1 \&#g" "/etc/init.d/gost"
+					sed -i "s#There_Is_Running_Command#nohup \"/usr/local/gost/gost -L socks5://${connect_username}:${connect_password}@:${install_port}\"#g" "/etc/init.d/gost"
 					chmod +x "/etc/init.d/gost"
 					if [ "$?" -eq "0" ]; then
 						clear
@@ -396,7 +396,7 @@ WantedBy=multi-user.target
 						clear_install
 						exit 1
 					fi
-					sed -i "s#There_Is_Running_Command#nohup \"/usr/local/gost/gost -L socks5://:${install_port}\" > \"/usr/local/gost/running_log.log\" 2>&1 &#g" "/etc/init.d/gost"
+					sed -i "s#There_Is_Running_Command#nohup \"/usr/local/gost/gost -L socks5://:${install_port}\"#g" "/etc/init.d/gost"
 					chmod +x "/etc/init.d/gost"
 					if [ "$?" -eq "0" ]; then
 						clear
