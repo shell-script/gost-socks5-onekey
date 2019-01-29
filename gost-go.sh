@@ -243,9 +243,9 @@ function data_processing(){
 			clear
 			input_port
 			clear
-			stty erase '^H' && read -r -p "请输入连接用户名（可空）" connect_username
+			stty erase '^H' && read -r -p "请输入连接用户名（可空）：" connect_username
 			if [ -n "${connect_username}" ]; then
-				stty erase '^H' && read -r -p "请输入连接密码" connect_password
+				stty erase '^H' && read -r -p "请输入连接密码：" connect_password
 				if [ -z "${connect_password}" ]; then
 					clear
 					echo -e "${error_font}连接密码不能为空！"
@@ -427,7 +427,14 @@ WantedBy=multi-user.target
 				fi
 			fi
 			clear
-			start_service
+			service gost start
+			if [ "$?" -eq "0" ]; then
+				clear
+				echo -e "${ok_font}Gost 启动成功。"
+			else
+				clear
+				echo -e "${error_font}Gost 启动失败！"
+			fi
 			echo_gost_config
 		fi
 	fi
