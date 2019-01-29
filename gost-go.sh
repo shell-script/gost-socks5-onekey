@@ -71,11 +71,11 @@ function check_os(){
 	if [[ "$(uname -m)" == "i686" ]] || [[ "$(uname -m)" == "i386" ]]; then
 		System_Bit="386"
 	elif [[ "$(uname -m)" == *"x86_64"* ]]; then
-		System_Bit="arm64"
+		System_Bit="amd64"
 	elif [[ "$(uname -m)" == *"armv7"* ]] || [[ "$(uname -m)" == "armv6l" ]]; then
 		System_Bit="arm"
 	elif [[ "$(uname -m)" == *"armv8"* ]] || [[ "$(uname -m)" == "aarch64" ]]; then
-		System_Bit="arm64"
+		System_Bit="amd64"
 	else
 		clear
 		echo -e "${error_font}目前暂不支持此系统的构架。"
@@ -212,6 +212,7 @@ function data_processing(){
 				exit 1
 			fi
 			gost_version="$(wget -qO- "https://github.com/ginuerzh/gost/tags"|grep "/gost/releases/tag/"|head -n 1|awk -F "/tag/" '{print $2}'|sed 's/\">//'|sed 's/v//g')"
+			wget "https://github.com/ginuerzh/gost/releases/download/v${gost_version}/gost_${gost_version}_linux_${System_Bit}.tar.gz"
 			wget "https://github.com/ginuerzh/gost/releases/download/v${gost_version}/gost_${gost_version}_linux_${System_Bit}.tar.gz"
 			tar -zxvf "gost_${gost_version}_linux_${System_Bit}.tar.gz"
 			mv "gost_${gost_version}_linux_${System_Bit}/gost" "./gost"
