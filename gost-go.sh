@@ -116,6 +116,7 @@ function check_install_status(){
 		if [ -z "${gost_pid}" ]; then
 			gost_status="${red_fontcolor}未运行${default_fontcolor}"
 			gost_use_command="${red_fontcolor}未运行${default_fontcolor}"
+			gost_pid="0"
 		else
 			gost_status="${green_fontcolor}正在运行${default_fontcolor} | ${green_fontcolor}${gost_pid}${default_fontcolor}"
 			ip_address="$(curl -4 ip.sb)"
