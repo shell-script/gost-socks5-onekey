@@ -212,7 +212,7 @@ function data_processing(){
 				exit 1
 			fi
 			gost_version="$(wget -qO- "https://github.com/ginuerzh/gost/tags"|grep "/gost/releases/tag/"|head -n 1|awk -F "/tag/" '{print $2}'|sed 's/\">//')"
-			wget "https://github.com/ginuerzh/gost/releases/download/v${gost_version}/gost_${gost_version}_linux_${System_Bit}.tar.gz"
+			wget "https://github.com/ginuerzh/gost/releases/download/${gost_version}/gost_${gost_version}_linux_${System_Bit}.tar.gz"
 			tar -zxvf "gost_${gost_version}_linux_${System_Bit}.tar.gz"
 			mv "gost_${gost_version}_linux_${System_Bit}/gost" "./gost"
 			rm -f "gost_${gost_version}_linux_${System_Bit}.tar.gz"
