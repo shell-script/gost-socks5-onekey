@@ -178,7 +178,7 @@ function data_processing(){
 		stop_service
 		prevent_uninstall_check
 		upgrade_program
-		start_service
+		restart_service
 		clear
 		echo -e "${ok_font}Gost更新成功。"
 	elif [ "${determine_type}" = "4" ]; then
@@ -560,7 +560,7 @@ function prevent_install_check(){
 				;;
 			*)
 				clear
-				echo -e "{error_font}安装已取消。"
+				echo -e "${error_font}安装已取消。"
 				exit 1
 				;;
 			esac
