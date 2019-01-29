@@ -97,7 +97,7 @@ function start_running(){
 	else
 		cd "/usr/local/gost"
 		echo -e "Try to start Gost..."
-		There_Is_Running_Command
+		There_Is_Running_Command > /usr/local/gost/running_log.log 2>&1 &
 		sleep 3
 		check_running
 		if [ "$?" -eq "0" ]; then
