@@ -214,7 +214,6 @@ function data_processing(){
 			fi
 			gost_version="$(wget -qO- "https://github.com/ginuerzh/gost/tags"|grep "/gost/releases/tag/"|head -n 1|awk -F "/tag/" '{print $2}'|sed 's/\">//'|sed 's/v//g')"
 			wget "https://github.com/ginuerzh/gost/releases/download/v${gost_version}/gost_${gost_version}_linux_${System_Bit}.tar.gz"
-			wget "https://github.com/ginuerzh/gost/releases/download/v${gost_version}/gost_${gost_version}_linux_${System_Bit}.tar.gz"
 			tar -zxvf "gost_${gost_version}_linux_${System_Bit}.tar.gz"
 			mv "gost_${gost_version}_linux_${System_Bit}/gost" "./gost"
 			rm -f "gost_${gost_version}_linux_${System_Bit}.tar.gz"
@@ -311,7 +310,7 @@ WantedBy=multi-user.target
 						clear_install
 						exit 1
 					fi
-					sed -i "s#There_Is_Running_Command#nohup \"/usr/local/gost/gost -L socks5://${connect_username}:${connect_password}@:${install_port}\" > \"/usr/local/gost/running_log.log\" 2>&1 &#g" "/etc/init.d/gost"
+					sed -i "s#There_Is_Running_Command#nohup \"/usr/local/gost/gost -L socks5://${connect_username}:${connect_password}@:${install_port}\" > \"/usr/local/gost/running_log.log\" 2>\&1 \&#g" "/etc/init.d/gost"
 					chmod +x "/etc/init.d/gost"
 					if [ "$?" -eq "0" ]; then
 						clear
