@@ -124,16 +124,32 @@ function check_install_status(){
 				ip_address="$(curl -4 https://ipinfo.io/ip)"
 			fi
 			if [ "${daemon_name}" == "systemd" ] && [ -f "/etc/systemd/system/gost.service" ]; then
-				if [ -n "$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/systemd/system/gost.service)" ]; then
-					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/systemd/system/gost.service | sed "s/@://g")&user=$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/systemd/system/gost.service | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/systemd/system/gost.service | awk -F : '{print $2}')${default_fontcolor}"
+				if [ "${System_OS}" == "Ubuntu" ]; then
+					if [ -n "$(grep -Eo "[0-9A-z]+:[0-9A-z]+" /etc/systemd/system/gost.service)" ]; then
+						gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/systemd/system/gost.service | sed "s/@://g")&user=$(grep -Eo "[0-9A-z]+:[0-9A-z]+" /etc/systemd/system/gost.service | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9A-z]+:[0-9A-z]+" /etc/systemd/system/gost.service | awk -F : '{print $2}')${default_fontcolor}"
+					else
+						gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /etc/systemd/system/gost.service | sed "s/://g")${default_fontcolor}"
+					fi
 				else
-					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /etc/systemd/system/gost.service | sed "s/://g")${default_fontcolor}"
+					if [ -n "$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/systemd/system/gost.service)" ]; then
+						gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/systemd/system/gost.service | sed "s/@://g")&user=$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/systemd/system/gost.service | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/systemd/system/gost.service | awk -F : '{print $2}')${default_fontcolor}"
+					else
+						gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /etc/systemd/system/gost.service | sed "s/://g")${default_fontcolor}"
+					fi
 				fi
 			elif [ "${daemon_name}" == "sysv" ]; then
-				if [ -n "$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/init.d/gost)" ]; then
-					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/init.d/gost | sed "s/@://g")&user=$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/init.d/gost | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/init.d/gost | awk -F : '{print $2}')${default_fontcolor}"
+				if [ "${System_OS}" == "Ubuntu" ]; then
+					if [ -n "$(grep -Eo "[0-9A-z]+:[0-9A-z]+" /etc/init.d/gost)" ]; then
+						gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/init.d/gost | sed "s/@://g")&user=$(grep -Eo "[0-9A-z]+:[0-9A-z]+" /etc/init.d/gost | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9A-z]+:[0-9A-z]+" /etc/init.d/gost | awk -F : '{print $2}')${default_fontcolor}"
+					else
+						gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /etc/init.d/gost | sed "s/://g")${default_fontcolor}"
+					fi
 				else
-					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /etc/init.d/gost | sed "s/://g")${default_fontcolor}"
+					if [ -n "$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/init.d/gost)" ]; then
+						gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/init.d/gost | sed "s/@://g")&user=$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/init.d/gost | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/init.d/gost | awk -F : '{print $2}')${default_fontcolor}"
+					else
+						gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /etc/init.d/gost | sed "s/://g")${default_fontcolor}"
+					fi
 				fi
 			else
 				gost_use_command="\n${green_backgroundcolor}$(cat /usr/local/gost/telegram_link.info)${default_fontcolor}"
@@ -251,6 +267,7 @@ function data_processing(){
 					echo -e "${error_font}连接密码不能为空！"
 					clear_install_reason="连接密码不能为空！"
 					clear_install
+					exit 1
 				fi
 			fi
 			if [ -n "${connect_username}" ] && [ -n "${connect_password}" ]; then
