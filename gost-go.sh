@@ -122,20 +122,10 @@ function check_install_status(){
 			if [ -z "${ip_address}" ]; then
 				ip_address="$(curl -4 https://ipinfo.io/ip)"
 			fi
-			if [ "${daemon_name}" == "systemd" ] && [ -f "/etc/systemd/system/gost.service" ]; then
-				if [ -n "$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /etc/systemd/system/gost.service)" ]; then
-					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/systemd/system/gost.service | sed "s/@://g")&user=$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /etc/systemd/system/gost.service | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /etc/systemd/system/gost.service | awk -F : '{print $2}')${default_fontcolor}"
-				else
-					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /etc/systemd/system/gost.service | sed "s/://g")${default_fontcolor}"
-				fi
-			elif [ "${daemon_name}" == "sysv" ]; then
-				if [ -n "$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /etc/init.d/gost)" ]; then
-					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/init.d/gost | sed "s/@://g")&user=$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /etc/init.d/gost | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /etc/init.d/gost | awk -F : '{print $2}')${default_fontcolor}"
-				else
-					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /etc/init.d/gost | sed "s/://g")${default_fontcolor}"
-				fi
+			if [ -n "$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /etc/systemd/system/gost.service)" ]; then
+				gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /usr/local/gost/socks5.json | sed "s/@://g")&user=$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /usr/local/gost/socks5.json | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /usr/local/gost/socks5.json | awk -F : '{print $2}')${default_fontcolor}"
 			else
-				gost_use_command="\n${green_backgroundcolor}$(cat /usr/local/gost/telegram_link.info)${default_fontcolor}"
+				gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /usr/local/gost/socks5.json | sed "s/://g")${default_fontcolor}"
 			fi
 		fi
 	fi
@@ -1104,7 +1094,7 @@ function close_port(){
 	clear
 	echo -e "正在设置防火墙中..."
 	if [ "${daemon_name}" == "systemd" ] && [ -f "/etc/systemd/system/gost.service" ]; then
-		uninstall_port="$(grep -Eo "@\:[0-9]+" /etc/systemd/system/gost.service | sed "s/@://g")"
+		uninstall_port="$(grep -Eo "@\:[0-9]+" /usr/local/gost/socks5.json | sed "s/@://g")"
 	elif [ "${daemon_name}" == "sysv" ] && [ -f "/etc/init.d/gost" ]; then
 		uninstall_port="$(grep -Eo "@\:[0-9]+" /etc/init.d/gost | sed "s/@://g")"
 	fi
