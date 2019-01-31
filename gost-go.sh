@@ -287,32 +287,27 @@ function data_processing(){
 				echo -e "${ok_font}已取消设定为Telegram专用。"
 				;;
 			esac
-			cat <<-EOF > "/usr/local/gost/socks5.json"
+			socks5_config="$(echo -e "
 {
-    "Debug": false,
-    "Retries": 3,
-    "ServeNodes": [
-			EOF
+    \"Debug\": false,
+    \"Retries\": 3,
+    \"ServeNodes\": [")"
 			if [ -n "${connect_username}" ] && [ -n "${connect_password}" ]; then
-				cat <<-EOF >> "/usr/local/gost/socks5.json"
-        "socks5://${connect_username}:${connect_password}@:${install_port}
-				EOF
+				socks5_config="$(echo -e "${socks5_config}
+        \"socks5://${connect_username}:${connect_password}@:${install_port}")"
 			else
-				cat <<-EOF >> "/usr/local/gost/socks5.json"
-        "socks5://:${install_port}
-				EOF
+				socks5_config="$(echo -e "${socks5_config}
+        \"socks5://:${install_port}")"
 			fi
 			if [ -n "$(cat "/usr/local/gost/telegram_iprange.info")" ]; then
-				echo -n "?bypass=/usr/local/gost/telegram_iprange.info" >> "/usr/local/gost/socks5.json"
+				socks5_config="$(echo -e "${socks5_config}?bypass=/usr/local/gost/telegram_iprange.info\"")"
 			else
-				cat <<-EOF >> "/usr/local/gost/socks5.json"
-"
-				EOF
+				socks5_config="$(echo -e "${socks5_config}\"")"
 			fi
-			cat <<-EOF >> "/usr/local/gost/socks5.json"
+			socks5_config="$(echo -e "
     ]
-}
-			EOF
+}")"
+			echo -e "${socks5_config}" > "/usr/local/gost/socks5.json"
 			if [ -n "$(cat "/usr/local/gost/socks5.json")" ]; then
 				clear
 				echo -e "${ok_font}写入配置文件成功。"
