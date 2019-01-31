@@ -1,5 +1,4 @@
 #! /bin/bash
-
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 
@@ -124,32 +123,16 @@ function check_install_status(){
 				ip_address="$(curl -4 https://ipinfo.io/ip)"
 			fi
 			if [ "${daemon_name}" == "systemd" ] && [ -f "/etc/systemd/system/gost.service" ]; then
-				if [ "${System_OS}" == "Ubuntu" ]; then
-					if [ -n "$(grep -Eo "[0-9A-z]+:[0-9A-z]+" /etc/systemd/system/gost.service)" ]; then
-						gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/systemd/system/gost.service | sed "s/@://g")&user=$(grep -Eo "[0-9A-z]+:[0-9A-z]+" /etc/systemd/system/gost.service | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9A-z]+:[0-9A-z]+" /etc/systemd/system/gost.service | awk -F : '{print $2}')${default_fontcolor}"
-					else
-						gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /etc/systemd/system/gost.service | sed "s/://g")${default_fontcolor}"
-					fi
+				if [ -n "$(grep -Eo "[0-9a-zA-Z]+:[0-9a-zA-Z]+" /etc/systemd/system/gost.service)" ]; then
+					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/systemd/system/gost.service | sed "s/@://g")&user=$(grep -Eo "[0-9a-zA-Z]+:[0-9a-zA-Z]+" /etc/systemd/system/gost.service | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9a-zA-Z]+:[0-9a-zA-Z]+" /etc/systemd/system/gost.service | awk -F : '{print $2}')${default_fontcolor}"
 				else
-					if [ -n "$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/systemd/system/gost.service)" ]; then
-						gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/systemd/system/gost.service | sed "s/@://g")&user=$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/systemd/system/gost.service | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/systemd/system/gost.service | awk -F : '{print $2}')${default_fontcolor}"
-					else
-						gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /etc/systemd/system/gost.service | sed "s/://g")${default_fontcolor}"
-					fi
+					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /etc/systemd/system/gost.service | sed "s/://g")${default_fontcolor}"
 				fi
 			elif [ "${daemon_name}" == "sysv" ]; then
-				if [ "${System_OS}" == "Ubuntu" ]; then
-					if [ -n "$(grep -Eo "[0-9A-z]+:[0-9A-z]+" /etc/init.d/gost)" ]; then
-						gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/init.d/gost | sed "s/@://g")&user=$(grep -Eo "[0-9A-z]+:[0-9A-z]+" /etc/init.d/gost | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9A-z]+:[0-9A-z]+" /etc/init.d/gost | awk -F : '{print $2}')${default_fontcolor}"
-					else
-						gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /etc/init.d/gost | sed "s/://g")${default_fontcolor}"
-					fi
+				if [ -n "$(grep -Eo "[0-9a-zA-Z]+:[0-9a-zA-Z]+" /etc/init.d/gost)" ]; then
+					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/init.d/gost | sed "s/@://g")&user=$(grep -Eo "[0-9a-zA-Z]+:[0-9a-zA-Z]+" /etc/init.d/gost | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9a-zA-Z]+:[0-9a-zA-Z]+" /etc/init.d/gost | awk -F : '{print $2}')${default_fontcolor}"
 				else
-					if [ -n "$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/init.d/gost)" ]; then
-						gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/init.d/gost | sed "s/@://g")&user=$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/init.d/gost | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9a-Z]+:[0-9a-Z]+" /etc/init.d/gost | awk -F : '{print $2}')${default_fontcolor}"
-					else
-						gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /etc/init.d/gost | sed "s/://g")${default_fontcolor}"
-					fi
+					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /etc/init.d/gost | sed "s/://g")${default_fontcolor}"
 				fi
 			else
 				gost_use_command="\n${green_backgroundcolor}$(cat /usr/local/gost/telegram_link.info)${default_fontcolor}"
@@ -270,182 +253,144 @@ function data_processing(){
 					exit 1
 				fi
 			fi
-			if [ -n "${connect_username}" ] && [ -n "${connect_password}" ]; then
-				if [ "${daemon_name}" == "systemd" ]; then
-					cat <<-EOF > /etc/systemd/system/gost.service
-[Unit]
-Description=gost
-
-[Service]
-ExecStart=/usr/local/gost/gost -L socks5://${connect_username}:${connect_password}@:${install_port}
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-					EOF
-					if [ "$?" -eq "0" ]; then
-						clear
-						echo -e "${ok_font}设置进程守护文件成功。"
-					else
-						clear
-						echo -e "${error_font}设置进程守护文件失败！"
-						clear_install_reason="设置进程守护文件失败。"
-						clear_install
-						exit 1
-					fi
-					systemctl daemon-reload
-					if [ "$?" -eq "0" ]; then
-						clear
-						echo -e "${ok_font}重载进程守护文件成功。"
-					else
-						clear
-						echo -e "${error_font}重载进程守护文件失败！"
-						clear_install_reason="重载进程守护文件失败。"
-						clear_install
-						exit 1
-					fi
-					systemctl enable gost.service
-					if [ "$?" -eq "0" ]; then
-						clear
-						echo -e "${ok_font}设置Gost开启自启动成功。"
-					else
-						clear
-						echo -e "${error_font}设置Gost开启自启动失败！"
-						clear_install_reason="设置Gost开启自启动失败。"
-						clear_install
-						exit 1
-					fi
-				elif [ "${daemon_name}" == "sysv" ]; then
-					curl "https://raw.githubusercontent.com/shell-script/gost-socks5-onekey/master/gost.sh" -o "/etc/init.d/gost"
-					if [ "$?" -eq "0" ]; then
-						clear
-						echo -e "${ok_font}下载进程守护文件成功。"
-					else
-						clear
-						echo -e "${error_font}下载进程守护文件失败！"
-						clear_install_reason="下载进程守护文件失败。"
-						clear_install
-						exit 1
-					fi
-					sed -i "s#There_Is_Running_Command#nohup /usr/local/gost/gost -L socks5://${connect_username}:${connect_password}@:${install_port}#g" "/etc/init.d/gost"
-					chmod +x "/etc/init.d/gost"
-					if [ "$?" -eq "0" ]; then
-						clear
-						echo -e "${ok_font}设置进程守护文件执行权限成功。"
-					else
-						clear
-						echo -e "${error_font}设置进程守护文件执行权限失败！"
-						clear_install_reason="设置进程守护文件执行权限失败。"
-						clear_install
-						exit 1
-					fi
-					if [ "${System_OS}" == "CentOS" ]; then
-						chkconfig --add gost
-						chkconfig gost on
-					elif [ "${System_OS}" == "Debian" -o "${System_OS}" == "Ubuntu" ]; then
-						update-rc.d -f gost defaults
-					fi
-					if [ "$?" -eq "0" ]; then
-						clear
-						echo -e "${ok_font}设置Gost开启自启动成功。"
-					else
-						clear
-						echo -e "${error_font}设置Gost开启自启动失败！"
-						clear_install_reason="设置Gost开启自启动失败。"
-						clear_install
-						exit 1
-					fi
+			clear
+			echo -e "${info_font}Gost拥有路由控制功能，可以指定代理的内容，借助此功能可实现只代理Telegram，无法用其代理其他内容，例如Google、Youtube等。\n温馨提示：脚本默认设置只能用于Telegram，如需取消请输入N。\n\n"
+			stty erase '^H' && read -r -p "是否需要设定为只能用于Telegram？（Y/n）：" install_for_tgonly
+			case "${install_for_tgonly}" in
+			[yY][eE][sS]|[yY])
+				telegram_iprange="$(echo -e "$(echo -e "$(curl -s https://ipinfo.io/AS59930 | grep -Eo "[0-9]+.[0-9]+.[0-9]+.[0-9]+/[0-9]+")\n$(curl -s https://ipinfo.io/AS62041 | grep -Eo "[0-9]+.[0-9]+.[0-9]+.[0-9]+/[0-9]+")" | sort -u -r)\n$(echo -e "$(curl -s https://ipinfo.io/AS59930 | grep -Eo "[0-9a-z]+\:[0-9a-z]+\:[0-9a-z]+\:\:/[0-9]+")\n$(curl -s https://ipinfo.io/AS62041 | grep -Eo "[0-9a-z]+\:[0-9a-z]+\:[0-9a-z]+\:\:/[0-9]+")" | sort -u)")"
+				echo -e "${telegram_iprange}" > "/usr/local/gost/telegram_iprange.info"
+				if [ -n "$(cat "/usr/local/gost/telegram_iprange.info")" ]; then
+					clear
+					echo -e "${ok_font}获取Telegram IP段成功。"
+				else
+					clear
+					echo -e "${error_font}获取Telegram IP段失败！"
+					clear_install_reason="获取Telegram IP段失败！"
+					clear_install
+					exit 1
 				fi
+			*)
+				clear
+				echo -e "${ok_font}已取消设定为Telegram专用。"
+				;;
+			esac
+			cat <<-EOF > "/usr/local/gost/socks.json"
+{
+    "Debug": false,
+    "Retries": 3,
+    "ServeNodes": [
+			EOF
+			if [ -n "${connect_username}" ] && [ -n "${connect_password}" ]; then
+				cat <<-EOF >> "/usr/local/gost/socks.json"
+        "socks5://${connect_username}:${connect_password}@:${install_port}
+				EOF
 			else
-				if [ "${daemon_name}" == "systemd" ]; then
-					cat <<-EOF > /etc/systemd/system/gost.service
-[Unit]
-Description=gost
-
-[Service]
-ExecStart=/usr/local/gost/gost -L socks5://:${install_port}
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-					EOF
-					if [ "$?" -eq "0" ]; then
-						clear
-						echo -e "${ok_font}设置进程守护文件成功。"
-					else
-						clear
-						echo -e "${error_font}设置进程守护文件失败！"
-						clear_install_reason="设置进程守护文件失败。"
-						clear_install
-						exit 1
-					fi
-					systemctl daemon-reload
-					if [ "$?" -eq "0" ]; then
-						clear
-						echo -e "${ok_font}重载进程守护文件成功。"
-					else
-						clear
-						echo -e "${error_font}重载进程守护文件失败！"
-						clear_install_reason="重载进程守护文件失败。"
-						clear_install
-						exit 1
-					fi
-					systemctl enable gost.service
-					if [ "$?" -eq "0" ]; then
-						clear
-						echo -e "${ok_font}设置Gost开启自启动成功。"
-					else
-						clear
-						echo -e "${error_font}设置Gost开启自启动失败！"
-						clear_install_reason="设置Gost开启自启动失败。"
-						clear_install
-						exit 1
-					fi
-				elif [ "${daemon_name}" == "sysv" ]; then
-					curl "https://raw.githubusercontent.com/shell-script/gost-socks5-onekey/master/gost.sh" -o "/etc/init.d/gost"
-					if [ "$?" -eq "0" ]; then
-						clear
-						echo -e "${ok_font}下载进程守护文件成功。"
-					else
-						clear
-						echo -e "${error_font}下载进程守护文件失败！"
-						clear_install_reason="下载进程守护文件失败。"
-						clear_install
-						exit 1
-					fi
-					sed -i "s#There_Is_Running_Command#nohup /usr/local/gost/gost -L socks5://:${install_port}#g" "/etc/init.d/gost"
-					chmod +x "/etc/init.d/gost"
-					if [ "$?" -eq "0" ]; then
-						clear
-						echo -e "${ok_font}设置进程守护文件执行权限成功。"
-					else
-						clear
-						echo -e "${error_font}设置进程守护文件执行权限失败！"
-						clear_install_reason="设置进程守护文件执行权限失败。"
-						clear_install
-						exit 1
-					fi
-					if [ "${System_OS}" == "CentOS" ]; then
-						chkconfig --add gost
-						chkconfig gost on
-					elif [ "${System_OS}" == "Debian" -o "${System_OS}" == "Ubuntu" ]; then
-						update-rc.d -f gost defaults
-					fi
-					if [ "$?" -eq "0" ]; then
-						clear
-						echo -e "${ok_font}设置Gost开启自启动成功。"
-					else
-						clear
-						echo -e "${error_font}设置Gost开启自启动失败！"
-						clear_install_reason="设置Gost开启自启动失败。"
-						clear_install
-						exit 1
-					fi
+				cat <<-EOF >> "/usr/local/gost/socks.json"
+        "socks5://:${install_port}
+				EOF
+			fi
+			if [ -n "$(cat "/usr/local/gost/telegram_iprange.info")" ]; then
+				cat <<-EOF >> "/usr/local/gost/socks.json"
+?bypass=~/usr/local/gost/telegram_iprange.info"
+				EOF
+			else
+				cat <<-EOF >> "/usr/local/gost/socks.json"
+"
+				EOF
+			fi
+			cat <<-EOF >> "/usr/local/gost/socks.json"
+    ]
+}
+			EOF
+			if [ -n "$(cat "/usr/local/gost/socks.json")" ]; then
+				clear
+				echo -e "${ok_font}写入配置文件成功。"
+			else
+				clear
+				echo -e "${error_font}写入配置文件失败！"
+				clear_install_reason="写入配置文件失败。"
+				clear_install
+				exit 1
+			fi
+			if [ "${daemon_name}" == "systemd" ]; then
+				curl "https://raw.githubusercontent.com/shell-script/gost-socks5-onekey/master/gost.service" -o "/etc/systemd/system/gost.service"
+				if [ "$?" -eq "0" ]; then
+					clear
+					echo -e "${ok_font}下载进程守护文件成功。"
+				else
+					clear
+					echo -e "${error_font}下载进程守护文件失败！"
+					clear_install_reason="下载进程守护文件失败。"
+					clear_install
+					exit 1
+				fi
+				systemctl daemon-reload
+				if [ "$?" -eq "0" ]; then
+					clear
+					echo -e "${ok_font}重载进程守护文件成功。"
+				else
+					clear
+					echo -e "${error_font}重载进程守护文件失败！"
+					clear_install_reason="重载进程守护文件失败。"
+					clear_install
+					exit 1
+				fi
+				systemctl enable gost.service
+				if [ "$?" -eq "0" ]; then
+					clear
+					echo -e "${ok_font}设置Gost开启自启动成功。"
+				else
+					clear
+					echo -e "${error_font}设置Gost开启自启动失败！"
+					clear_install_reason="设置Gost开启自启动失败。"
+					clear_install
+					exit 1
+				fi
+			elif [ "${daemon_name}" == "sysv" ]; then
+				curl "https://raw.githubusercontent.com/shell-script/gost-socks5-onekey/master/gost.sh" -o "/etc/init.d/gost"
+				if [ "$?" -eq "0" ]; then
+					clear
+					echo -e "${ok_font}下载进程守护文件成功。"
+				else
+					clear
+					echo -e "${error_font}下载进程守护文件失败！"
+					clear_install_reason="下载进程守护文件失败。"
+					clear_install
+					exit 1
+				fi
+				chmod +x "/etc/init.d/gost"
+				if [ "$?" -eq "0" ]; then
+					clear
+					echo -e "${ok_font}设置进程守护文件执行权限成功。"
+				else
+					clear
+					echo -e "${error_font}设置进程守护文件执行权限失败！"
+					clear_install_reason="设置进程守护文件执行权限失败。"
+					clear_install
+					exit 1
+				fi
+				if [ "${System_OS}" == "CentOS" ]; then
+					chkconfig --add gost
+					chkconfig gost on
+				elif [ "${System_OS}" == "Debian" -o "${System_OS}" == "Ubuntu" ]; then
+					update-rc.d -f gost defaults
+				fi
+				if [ "$?" -eq "0" ]; then
+					clear
+					echo -e "${ok_font}设置Gost开启自启动成功。"
+				else
+					clear
+					echo -e "${error_font}设置Gost开启自启动失败！"
+					clear_install_reason="设置Gost开启自启动失败。"
+					clear_install
+					exit 1
 				fi
 			fi
 			clear
 			service gost start
-			if [ "$?" -eq "0" ]; then
+			sleep 3s
+			if [ "$(ps -ef |grep "gost" |grep -v "grep" | grep -v ".sh"| grep -v "init.d" |grep -v "service" |awk '{print $2}')" -eq "0" ]; then
 				clear
 				echo -e "${ok_font}Gost 启动成功。"
 			else
