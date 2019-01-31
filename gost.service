@@ -1,0 +1,9 @@
+[Unit]
+Description=gost
+
+[Service]
+ExecStart=/usr/local/gost/gost  -C /usr/local/gost/socks5.json
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
