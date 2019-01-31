@@ -122,7 +122,7 @@ function check_install_status(){
 			if [ -z "${ip_address}" ]; then
 				ip_address="$(curl -4 https://ipinfo.io/ip)"
 			fi
-			if [ -n "$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /etc/systemd/system/gost.service)" ]; then
+			if [ -n "$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" "/usr/local/gost/socks5.json")" ]; then
 				gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /usr/local/gost/socks5.json | sed "s/@://g")&user=$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /usr/local/gost/socks5.json | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /usr/local/gost/socks5.json | awk -F : '{print $2}')${default_fontcolor}"
 			else
 				gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /usr/local/gost/socks5.json | sed "s/://g")${default_fontcolor}"
