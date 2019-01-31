@@ -2,7 +2,7 @@
 Description=gost
 
 [Service]
-ExecStart=/usr/local/gost/gost  -C /usr/local/gost/socks5.json
+ExecStart=/usr/local/gost/gost -C /usr/local/gost/socks5.json
 Restart=always
 
 [Install]
