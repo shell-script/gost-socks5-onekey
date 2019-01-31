@@ -242,6 +242,7 @@ function data_processing(){
 			clear
 			input_port
 			clear
+			echo -e "{info_font}温馨提示：用户名和密码仅支持大小写字母和数字，如果输入其他字符将导致控制台输出的TG链接出现问题，届时请手动执行下面的命令：\n${green_backgroundcolor}cat /usr/local/gost/telegram_link.info${default_fontcolor}\n\n"
 			stty erase '^H' && read -r -p "请输入连接用户名（可空）：" connect_username
 			if [ -n "${connect_username}" ]; then
 				stty erase '^H' && read -r -p "请输入连接密码：" connect_password
