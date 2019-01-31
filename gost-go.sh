@@ -271,6 +271,7 @@ function data_processing(){
 					clear_install
 					exit 1
 				fi
+				;;
 			*)
 				clear
 				echo -e "${ok_font}已取消设定为Telegram专用。"
