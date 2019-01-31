@@ -123,14 +123,14 @@ function check_install_status(){
 				ip_address="$(curl -4 https://ipinfo.io/ip)"
 			fi
 			if [ "${daemon_name}" == "systemd" ] && [ -f "/etc/systemd/system/gost.service" ]; then
-				if [ -n "$(grep -Eo "[0-9a-zA-Z]+:[0-9a-zA-Z]+" /etc/systemd/system/gost.service)" ]; then
-					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/systemd/system/gost.service | sed "s/@://g")&user=$(grep -Eo "[0-9a-zA-Z]+:[0-9a-zA-Z]+" /etc/systemd/system/gost.service | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9a-zA-Z]+:[0-9a-zA-Z]+" /etc/systemd/system/gost.service | awk -F : '{print $2}')${default_fontcolor}"
+				if [ -n "$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /etc/systemd/system/gost.service)" ]; then
+					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/systemd/system/gost.service | sed "s/@://g")&user=$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /etc/systemd/system/gost.service | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /etc/systemd/system/gost.service | awk -F : '{print $2}')${default_fontcolor}"
 				else
 					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /etc/systemd/system/gost.service | sed "s/://g")${default_fontcolor}"
 				fi
 			elif [ "${daemon_name}" == "sysv" ]; then
-				if [ -n "$(grep -Eo "[0-9a-zA-Z]+:[0-9a-zA-Z]+" /etc/init.d/gost)" ]; then
-					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/init.d/gost | sed "s/@://g")&user=$(grep -Eo "[0-9a-zA-Z]+:[0-9a-zA-Z]+" /etc/init.d/gost | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9a-zA-Z]+:[0-9a-zA-Z]+" /etc/init.d/gost | awk -F : '{print $2}')${default_fontcolor}"
+				if [ -n "$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /etc/init.d/gost)" ]; then
+					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "@\:[0-9]+" /etc/init.d/gost | sed "s/@://g")&user=$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /etc/init.d/gost | awk -F : '{print $1}')&pass=$(grep -Eo "[0-9a-zA-Z\_\-]+:[0-9a-zA-Z\_\-]+" /etc/init.d/gost | awk -F : '{print $2}')${default_fontcolor}"
 				else
 					gost_use_command="\n${green_backgroundcolor}https://t.me/socks?server=${ip_address}?port=$(grep -Eo "\:[0-9]+" /etc/init.d/gost | sed "s/://g")${default_fontcolor}"
 				fi
@@ -242,7 +242,7 @@ function data_processing(){
 			clear
 			input_port
 			clear
-			echo -e "${info_font}温馨提示：用户名和密码仅支持大小写字母和数字，如果输入其他字符将导致控制台输出的TG链接出现问题，届时请手动执行下面的命令：\n${green_backgroundcolor}cat /usr/local/gost/telegram_link.info${default_fontcolor}\n\n"
+			echo -e "${info_font}温馨提示：用户名和密码仅支持大小写字母、数字、下划线和横线，输入其他字符会导致控制台输出的TG代理链接出现问题，届时请手动执行下面的命令以查看链接：\n${green_backgroundcolor}cat /usr/local/gost/telegram_link.info${default_fontcolor}\n\n"
 			stty erase '^H' && read -r -p "请输入连接用户名（可空）：" connect_username
 			if [ -n "${connect_username}" ]; then
 				stty erase '^H' && read -r -p "请输入连接密码：" connect_password
