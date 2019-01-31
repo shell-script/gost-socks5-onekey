@@ -255,7 +255,7 @@ function data_processing(){
 				fi
 			fi
 			clear
-			echo -e "${info_font}Gost拥有路由控制功能，可以指定代理的内容，借助此功能可实现只代理Telegram，无法用其代理其他内容，例如Google、Youtube等。\n温馨提示：脚本默认设置只能用于Telegram，如需取消请输入N。\n\n"
+			echo -e "${info_font}Gost拥有路由控制功能，可以指定代理的内容，借助此功能可实现只代理Telegram，无法用其代理其他内容，例如Google、Youtube等。\n${info_font}温馨提示：脚本默认设置只能用于Telegram，如需取消请输入N。\n\n"
 			stty erase '^H' && read -r -p "是否需要设定为只能用于Telegram？（Y/n）：" install_for_tgonly
 			case "${install_for_tgonly}" in
 			[nN][oO]|[nN])
@@ -264,7 +264,7 @@ function data_processing(){
 				;;
 			*)
 				telegram_iprange="$(echo -e "$(echo -e "$(curl https://ipinfo.io/AS59930 | grep -Eo "[0-9]+.[0-9]+.[0-9]+.[0-9]+/[0-9]+")\n$(curl https://ipinfo.io/AS62041 | grep -Eo "[0-9]+.[0-9]+.[0-9]+.[0-9]+/[0-9]+")" | sort -u -r)\n$(echo -e "$(curl https://ipinfo.io/AS59930 | grep -Eo "[0-9a-z]+\:[0-9a-z]+\:[0-9a-z]+\:\:/[0-9]+")\n$(curl https://ipinfo.io/AS62041 | grep -Eo "[0-9a-z]+\:[0-9a-z]+\:[0-9a-z]+\:\:/[0-9]+")" | sort -u)")"
-				if [ -n "$(cat "/usr/local/gost/telegram_iprange.info")" ]; then
+				if [ -n "${telegram_iprange}" ]; then
 					clear
 					echo -e "${ok_font}获取Telegram IP段成功。"
 				else
