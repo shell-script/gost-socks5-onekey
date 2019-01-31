@@ -242,7 +242,7 @@ function data_processing(){
 			clear
 			input_port
 			clear
-			echo -e "{info_font}温馨提示：用户名和密码仅支持大小写字母和数字，如果输入其他字符将导致控制台输出的TG链接出现问题，届时请手动执行下面的命令：\n${green_backgroundcolor}cat /usr/local/gost/telegram_link.info${default_fontcolor}\n\n"
+			echo -e "${info_font}温馨提示：用户名和密码仅支持大小写字母和数字，如果输入其他字符将导致控制台输出的TG链接出现问题，届时请手动执行下面的命令：\n${green_backgroundcolor}cat /usr/local/gost/telegram_link.info${default_fontcolor}\n\n"
 			stty erase '^H' && read -r -p "请输入连接用户名（可空）：" connect_username
 			if [ -n "${connect_username}" ]; then
 				stty erase '^H' && read -r -p "请输入连接密码：" connect_password
@@ -392,14 +392,16 @@ function data_processing(){
 			clear
 			service gost start
 			sleep 3s
-			if [ "$(ps -ef |grep "gost" |grep -v "grep" | grep -v ".sh"| grep -v "init.d" |grep -v "service" |awk '{print $2}')" -eq "0" ]; then
+			if [ -n "$(ps -ef |grep "gost" |grep -v "grep" | grep -v ".sh"| grep -v "init.d" |grep -v "service" |awk '{print $2}')" ]; then
 				clear
 				echo -e "${ok_font}Gost 启动成功。"
+				echo_gost_config
 			else
 				clear
 				echo -e "${error_font}Gost 启动失败！"
+				echo_gost_config
+				echo -e "\n\n${error_font}Gost 启动失败！"
 			fi
-			echo_gost_config
 		fi
 	fi
 	echo -e "\n${ok_font}请求处理完毕。"
