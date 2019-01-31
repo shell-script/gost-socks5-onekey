@@ -258,7 +258,11 @@ function data_processing(){
 			echo -e "${info_font}Gost拥有路由控制功能，可以指定代理的内容，借助此功能可实现只代理Telegram，无法用其代理其他内容，例如Google、Youtube等。\n温馨提示：脚本默认设置只能用于Telegram，如需取消请输入N。\n\n"
 			stty erase '^H' && read -r -p "是否需要设定为只能用于Telegram？（Y/n）：" install_for_tgonly
 			case "${install_for_tgonly}" in
-			[yY][eE][sS]|[yY])
+			[nN][oO]|[nN])
+				clear
+				echo -e "${ok_font}已取消设定为Telegram专用。"
+				;;
+			*)
 				telegram_iprange="$(echo -e "$(echo -e "$(curl https://ipinfo.io/AS59930 | grep -Eo "[0-9]+.[0-9]+.[0-9]+.[0-9]+/[0-9]+")\n$(curl https://ipinfo.io/AS62041 | grep -Eo "[0-9]+.[0-9]+.[0-9]+.[0-9]+/[0-9]+")" | sort -u -r)\n$(echo -e "$(curl https://ipinfo.io/AS59930 | grep -Eo "[0-9a-z]+\:[0-9a-z]+\:[0-9a-z]+\:\:/[0-9]+")\n$(curl https://ipinfo.io/AS62041 | grep -Eo "[0-9a-z]+\:[0-9a-z]+\:[0-9a-z]+\:\:/[0-9]+")" | sort -u)")"
 				if [ -n "$(cat "/usr/local/gost/telegram_iprange.info")" ]; then
 					clear
@@ -282,10 +286,6 @@ function data_processing(){
 					exit 1
 				fi
 				;;
-			*)
-				clear
-				echo -e "${ok_font}已取消设定为Telegram专用。"
-				;;
 			esac
 			socks5_config="$(echo -e "
 {
@@ -304,7 +304,7 @@ function data_processing(){
 			else
 				socks5_config="$(echo -e "${socks5_config}\"")"
 			fi
-			socks5_config="$(echo -e "
+			socks5_config="$(echo -e "${socks5_config}
     ]
 }")"
 			echo -e "${socks5_config}" > "/usr/local/gost/socks5.json"
@@ -891,9 +891,16 @@ function check_port(){
 		clear
 		echo -e "${error_font}检测到${install_port}端口被占用，以下为端口占用信息："
 		lsof -i:"${install_port}"
-		stty erase '^H' && read -r -r -p "是否尝试强制终止该进程？[Y/N]（默认：N，可空）" install_force
+		stty erase '^H' && read -r -r -p "是否尝试强制终止该进程？[Y/n]" install_force
 		case "${install_force}" in
-		[yY][eE][sS]|[yY])
+		[nN][oO]|[nN])
+			clear
+			echo -e "${error_font}取消安装。"
+			clear_install_reason="${install_port}端口被占用。"
+			clear_install
+			exit 1
+			;;
+		*)
 			clear
 			echo -e "正在尝试强制终止该进程..."
 			if [ -n "$(lsof -i:"${install_port}" | awk '{print $1}' | grep -v "COMMAND" | grep "nginx")" ]; then
@@ -918,13 +925,6 @@ function check_port(){
 				clear_install
 				exit 1
 			fi
-			;;
-		*)
-			clear
-			echo -e "${error_font}取消安装。"
-			clear_install_reason="${install_port}端口被占用。"
-			clear_install
-			exit 1
 			;;
 		esac
 	fi
