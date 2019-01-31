@@ -259,8 +259,7 @@ function data_processing(){
 			stty erase '^H' && read -r -p "是否需要设定为只能用于Telegram？（Y/n）：" install_for_tgonly
 			case "${install_for_tgonly}" in
 			[yY][eE][sS]|[yY])
-				telegram_iprange="$(echo -e "$(echo -e "$(curl -s https://ipinfo.io/AS59930 | grep -Eo "[0-9]+.[0-9]+.[0-9]+.[0-9]+/[0-9]+")\n$(curl -s https://ipinfo.io/AS62041 | grep -Eo "[0-9]+.[0-9]+.[0-9]+.[0-9]+/[0-9]+")" | sort -u -r)\n$(echo -e "$(curl -s https://ipinfo.io/AS59930 | grep -Eo "[0-9a-z]+\:[0-9a-z]+\:[0-9a-z]+\:\:/[0-9]+")\n$(curl -s https://ipinfo.io/AS62041 | grep -Eo "[0-9a-z]+\:[0-9a-z]+\:[0-9a-z]+\:\:/[0-9]+")" | sort -u)")"
-				echo -e "${telegram_iprange}" > "/usr/local/gost/telegram_iprange.info"
+				telegram_iprange="$(echo -e "$(echo -e "$(curl https://ipinfo.io/AS59930 | grep -Eo "[0-9]+.[0-9]+.[0-9]+.[0-9]+/[0-9]+")\n$(curl https://ipinfo.io/AS62041 | grep -Eo "[0-9]+.[0-9]+.[0-9]+.[0-9]+/[0-9]+")" | sort -u -r)\n$(echo -e "$(curl https://ipinfo.io/AS59930 | grep -Eo "[0-9a-z]+\:[0-9a-z]+\:[0-9a-z]+\:\:/[0-9]+")\n$(curl https://ipinfo.io/AS62041 | grep -Eo "[0-9a-z]+\:[0-9a-z]+\:[0-9a-z]+\:\:/[0-9]+")" | sort -u)")"
 				if [ -n "$(cat "/usr/local/gost/telegram_iprange.info")" ]; then
 					clear
 					echo -e "${ok_font}获取Telegram IP段成功。"
@@ -271,41 +270,50 @@ function data_processing(){
 					clear_install
 					exit 1
 				fi
+				echo -e "reverse true\n${telegram_iprange}" > "/usr/local/gost/telegram_iprange.info"
+				if [ -n "$(cat "/usr/local/gost/telegram_iprange.info")" ]; then
+					clear
+					echo -e "${ok_font}写入路由控制配置成功。"
+				else
+					clear
+					echo -e "${error_font}写入路由控制配置失败！"
+					clear_install_reason="写入路由控制配置失败！"
+					clear_install
+					exit 1
+				fi
 				;;
 			*)
 				clear
 				echo -e "${ok_font}已取消设定为Telegram专用。"
 				;;
 			esac
-			cat <<-EOF > "/usr/local/gost/socks.json"
+			cat <<-EOF > "/usr/local/gost/socks5.json"
 {
     "Debug": false,
     "Retries": 3,
     "ServeNodes": [
 			EOF
 			if [ -n "${connect_username}" ] && [ -n "${connect_password}" ]; then
-				cat <<-EOF >> "/usr/local/gost/socks.json"
+				cat <<-EOF >> "/usr/local/gost/socks5.json"
         "socks5://${connect_username}:${connect_password}@:${install_port}
 				EOF
 			else
-				cat <<-EOF >> "/usr/local/gost/socks.json"
+				cat <<-EOF >> "/usr/local/gost/socks5.json"
         "socks5://:${install_port}
 				EOF
 			fi
 			if [ -n "$(cat "/usr/local/gost/telegram_iprange.info")" ]; then
-				cat <<-EOF >> "/usr/local/gost/socks.json"
-?bypass=~/usr/local/gost/telegram_iprange.info"
-				EOF
+				echo -n "?bypass=/usr/local/gost/telegram_iprange.info" >> "/usr/local/gost/socks5.json"
 			else
-				cat <<-EOF >> "/usr/local/gost/socks.json"
+				cat <<-EOF >> "/usr/local/gost/socks5.json"
 "
 				EOF
 			fi
-			cat <<-EOF >> "/usr/local/gost/socks.json"
+			cat <<-EOF >> "/usr/local/gost/socks5.json"
     ]
 }
 			EOF
-			if [ -n "$(cat "/usr/local/gost/socks.json")" ]; then
+			if [ -n "$(cat "/usr/local/gost/socks5.json")" ]; then
 				clear
 				echo -e "${ok_font}写入配置文件成功。"
 			else
